@@ -3,439 +3,527 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>我用 AI 搭了一个数据工具 · 黑钻项目组内部分享</title>
+<title>我用 AI 把每周 2 小时的汇报工作压缩到 20 分钟</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #fff; color: #1a1a2e; line-height: 1.7; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: #fafafa; color: #111; line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
 
 /* ── Nav ── */
 nav {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(255,255,255,0.92); backdrop-filter: blur(12px);
-  border-bottom: 1px solid #f0f0f0;
-  padding: 0 32px;
-  display: flex; align-items: center; gap: 0;
+  position: sticky; top: 0; z-index: 99;
+  background: rgba(250,250,250,0.9); backdrop-filter: blur(16px);
+  border-bottom: 1px solid #ebebeb;
+  display: flex; align-items: center; padding: 0 40px; height: 52px;
 }
-.nav-brand { font-size: 14px; font-weight: 700; color: #1a1a2e; padding: 16px 0; margin-right: 24px; white-space: nowrap; }
-.nav-links { display: flex; gap: 0; overflow-x: auto; }
-.nav-links a { padding: 16px 14px; font-size: 13px; color: #888; text-decoration: none; white-space: nowrap; transition: color .2s; }
-.nav-links a:hover { color: #e94560; }
-.nav-date { margin-left: auto; font-size: 12px; color: #bbb; white-space: nowrap; padding-left: 16px; }
+.nav-logo { font-size: 15px; font-weight: 800; color: #111; margin-right: 32px; letter-spacing: -.3px; }
+.nav-links { display: flex; gap: 4px; }
+.nav-links a {
+  padding: 6px 12px; font-size: 13px; color: #666;
+  text-decoration: none; border-radius: 6px; transition: all .15s;
+}
+.nav-links a:hover { color: #111; background: #f0f0f0; }
+.nav-meta { margin-left: auto; font-size: 12px; color: #bbb; }
 
 /* ── Hero ── */
 .hero {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
-  padding: 100px 24px 120px;
-  text-align: center;
-  position: relative; overflow: hidden;
+  padding: 120px 40px 100px;
+  max-width: 760px; margin: 0 auto;
 }
-.hero::before {
-  content: ''; position: absolute;
-  width: 700px; height: 700px;
-  background: radial-gradient(circle, rgba(233,69,96,0.12) 0%, transparent 65%);
-  top: -200px; right: -150px; border-radius: 50%;
-}
-.hero::after {
-  content: ''; position: absolute;
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 65%);
-  bottom: -150px; left: -100px; border-radius: 50%;
-}
-.hero-eyebrow {
-  display: inline-block;
-  background: rgba(233,69,96,0.2); border: 1px solid rgba(233,69,96,0.4);
-  color: #fca5a5; padding: 5px 16px; border-radius: 99px;
-  font-size: 12px; font-weight: 700; margin-bottom: 28px;
-  position: relative; z-index: 1;
+.hero-kicker {
+  font-size: 12px; font-weight: 700; color: #e94560;
+  text-transform: uppercase; letter-spacing: 2px;
+  margin-bottom: 24px; display: block;
 }
 .hero h1 {
-  color: #fff; font-size: 48px; font-weight: 800;
-  line-height: 1.2; margin-bottom: 20px;
-  position: relative; z-index: 1;
+  font-size: 52px; font-weight: 900; line-height: 1.1;
+  letter-spacing: -1.5px; color: #111; margin-bottom: 24px;
 }
-.hero h1 em { color: #e94560; font-style: normal; }
-.hero-sub {
-  color: rgba(255,255,255,0.6); font-size: 18px;
-  max-width: 520px; margin: 0 auto 48px;
-  position: relative; z-index: 1;
+.hero h1 .accent { color: #e94560; }
+.hero-desc {
+  font-size: 19px; color: #555; line-height: 1.7;
+  max-width: 560px; margin-bottom: 56px;
 }
-.hero-stats {
-  display: flex; gap: 48px; justify-content: center; flex-wrap: wrap;
-  position: relative; z-index: 1;
+.hero-numbers {
+  display: flex; gap: 48px; padding-top: 40px;
+  border-top: 1px solid #ebebeb;
 }
-.hero-stat .val { font-size: 36px; font-weight: 800; color: #e94560; }
-.hero-stat .lbl { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+.hero-num .n { font-size: 40px; font-weight: 900; color: #111; letter-spacing: -1px; line-height: 1; }
+.hero-num .n span { color: #e94560; }
+.hero-num .l { font-size: 13px; color: #888; margin-top: 6px; }
 
-/* ── Section ── */
-.section { padding: 80px 24px; }
-.section.gray { background: #f8f9fa; }
-.section.dark { background: linear-gradient(135deg, #1a1a2e, #0f3460); }
-.inner { max-width: 860px; margin: 0 auto; }
-.inner.wide { max-width: 1000px; }
+/* ── Section base ── */
+section { padding: 96px 40px; }
+section.alt { background: #fff; }
+.wrap { max-width: 760px; margin: 0 auto; }
+.wrap.wide { max-width: 960px; }
 
-.eyebrow {
-  display: inline-block;
+.label {
   font-size: 11px; font-weight: 700; color: #e94560;
-  text-transform: uppercase; letter-spacing: 1.5px;
-  margin-bottom: 12px;
+  text-transform: uppercase; letter-spacing: 2px;
+  margin-bottom: 16px; display: block;
 }
-.eyebrow::before { content: '— '; }
-h2.sec-title { font-size: 34px; font-weight: 800; line-height: 1.3; margin-bottom: 14px; }
-.sec-sub { font-size: 16px; color: #666; max-width: 540px; margin-bottom: 52px; }
-.dark h2.sec-title { color: #fff; }
-.dark .sec-sub { color: rgba(255,255,255,0.55); }
-
-/* ── Pain points ── */
-.pain-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
-.pain-card {
-  background: #fff; border-radius: 16px; padding: 28px 24px;
-  border: 1.5px solid #f0f0f0;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+h2 {
+  font-size: 36px; font-weight: 900; letter-spacing: -1px;
+  line-height: 1.2; margin-bottom: 16px; color: #111;
 }
-.pain-icon { font-size: 28px; margin-bottom: 14px; }
-.pain-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: #1a1a2e; }
-.pain-card p { font-size: 14px; color: #666; line-height: 1.7; }
+.lead { font-size: 17px; color: #555; max-width: 520px; margin-bottom: 56px; line-height: 1.7; }
 
-/* ── Solution ── */
-.solution-list { display: flex; flex-direction: column; gap: 24px; }
-.sol-item {
+/* ── Pain ── */
+.pain-list { display: flex; flex-direction: column; gap: 1px; border: 1px solid #ebebeb; border-radius: 16px; overflow: hidden; }
+.pain-item {
   display: flex; gap: 24px; align-items: flex-start;
-  background: #fff; border-radius: 16px; padding: 28px;
-  border: 1.5px solid #f0f0f0;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-  transition: all .2s;
+  padding: 28px 32px; background: #fff; transition: background .15s;
 }
-.sol-item:hover { border-color: #e94560; box-shadow: 0 8px 28px rgba(233,69,96,0.1); }
-.sol-num {
-  width: 44px; height: 44px; flex-shrink: 0;
-  background: linear-gradient(135deg, #e94560, #c73652);
-  color: #fff; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; font-weight: 800;
+.pain-item:hover { background: #fafafa; }
+.pain-item + .pain-item { border-top: 1px solid #ebebeb; }
+.pain-emoji { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.pain-item h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.pain-item p { font-size: 14px; color: #666; line-height: 1.7; }
+
+/* ── What I built ── */
+.built-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.built-card {
+  background: #fff; border: 1px solid #ebebeb; border-radius: 14px;
+  padding: 28px; transition: all .2s;
 }
-.sol-body h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
-.sol-body p { font-size: 14px; color: #666; line-height: 1.7; }
-.sol-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
-.sol-tag {
-  background: #fff0f3; color: #e94560;
-  border: 1px solid #fca5a5;
-  padding: 2px 10px; border-radius: 99px; font-size: 12px; font-weight: 600;
+.built-card:hover { border-color: #e94560; box-shadow: 0 4px 24px rgba(233,69,96,.08); }
+.built-card .bc-icon { font-size: 28px; margin-bottom: 16px; }
+.built-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.built-card p { font-size: 13px; color: #666; line-height: 1.7; }
+.built-card .bc-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+.bc-tag {
+  font-size: 11px; font-weight: 600; color: #666;
+  background: #f5f5f5; border-radius: 99px; padding: 3px 10px;
 }
 
-/* ── Flow ── */
-.flow-steps { display: flex; flex-direction: column; gap: 0; position: relative; }
-.flow-steps::before {
-  content: ''; position: absolute;
-  left: 21px; top: 44px; bottom: 44px; width: 2px;
-  background: linear-gradient(180deg, #e94560, #6366f1);
+/* ── How it works ── */
+.steps { display: flex; flex-direction: column; gap: 0; }
+.step {
+  display: grid; grid-template-columns: 48px 1fr; gap: 20px;
+  padding: 28px 0; border-bottom: 1px solid #ebebeb; align-items: start;
 }
-.flow-step {
-  display: flex; gap: 20px; align-items: flex-start;
-  padding: 20px 0;
-}
-.flow-dot {
-  width: 44px; height: 44px; flex-shrink: 0;
-  background: #fff; border: 3px solid #e94560;
-  border-radius: 50%;
+.step:last-child { border-bottom: none; }
+.step-num {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #111; color: #fff;
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px; font-weight: 800; color: #e94560;
-  position: relative; z-index: 1;
+  font-size: 14px; font-weight: 800; flex-shrink: 0; margin-top: 2px;
 }
-.flow-content { padding-top: 8px; }
-.flow-content h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-.flow-content p { font-size: 14px; color: #666; }
-.flow-content .fc-tag { display: inline-block; background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; padding: 2px 10px; border-radius: 99px; font-size: 12px; margin-top: 6px; }
+.step h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.step p { font-size: 14px; color: #666; line-height: 1.7; }
+.step .s-note {
+  display: inline-block; margin-top: 10px;
+  font-size: 12px; color: #e94560; font-weight: 600;
+  background: #fff0f3; border-radius: 6px; padding: 3px 10px;
+}
+
+/* ── Tech ── */
+.tech-block {
+  background: #111; border-radius: 16px; padding: 40px;
+  color: #fff;
+}
+.tech-block .label { color: #e94560; }
+.tech-block h2 { color: #fff; }
+.tech-block .lead { color: rgba(255,255,255,.5); }
+.tech-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 40px; }
+.tech-item {
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px; padding: 20px;
+}
+.tech-item .ti-label { font-size: 11px; color: rgba(255,255,255,.4); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.tech-item .ti-val { font-size: 15px; font-weight: 700; color: #fff; }
+.tech-item .ti-desc { font-size: 12px; color: rgba(255,255,255,.4); margin-top: 4px; line-height: 1.5; }
 
 /* ── Highlights ── */
-.hl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.hl-card {
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 16px; padding: 28px 24px;
-  transition: all .2s;
+.hl-list { display: flex; flex-direction: column; gap: 24px; }
+.hl-item {
+  display: flex; gap: 24px; align-items: flex-start;
 }
-.hl-card:hover { background: rgba(255,255,255,0.1); border-color: rgba(233,69,96,0.4); }
-.hl-num { font-size: 13px; font-weight: 700; color: #e94560; margin-bottom: 10px; }
-.hl-card h3 { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 8px; }
-.hl-card p { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.7; }
+.hl-num {
+  font-size: 13px; font-weight: 800; color: #e94560;
+  min-width: 32px; padding-top: 2px;
+}
+.hl-item h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+.hl-item p { font-size: 14px; color: #555; line-height: 1.7; }
 
 /* ── Gaps ── */
 .gap-list { display: flex; flex-direction: column; gap: 16px; }
 .gap-item {
-  background: #fff; border-radius: 12px; padding: 22px 24px;
-  border-left: 4px solid #fbbf24;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 24px 28px; background: #fff;
+  border: 1px solid #ebebeb; border-radius: 12px;
+  border-left: 3px solid #fbbf24;
 }
-.gap-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: #92400e; }
+.gap-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
 .gap-item p { font-size: 14px; color: #666; line-height: 1.7; }
-.gap-future { font-size: 13px; color: #0369a1; margin-top: 8px; }
-.gap-future::before { content: '→ 未来方向：'; font-weight: 700; }
+.gap-next { font-size: 13px; color: #0369a1; margin-top: 8px; font-weight: 500; }
+.gap-next::before { content: '→ '; }
+
+/* ── Replicate ── */
+.rep-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.rep-step {
+  background: #fff; border: 1px solid #ebebeb; border-radius: 14px; padding: 28px;
+}
+.rep-step .rs-n {
+  width: 32px; height: 32px; background: #e94560; color: #fff;
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; margin-bottom: 16px;
+}
+.rep-step h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.rep-step p { font-size: 13px; color: #666; line-height: 1.7; }
 
 /* ── Footer ── */
 footer {
-  background: #1a1a2e; padding: 40px 24px; text-align: center;
+  padding: 48px 40px; border-top: 1px solid #ebebeb;
+  display: flex; align-items: center; justify-content: space-between;
 }
-footer .f-title { color: #fff; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-footer .f-sub { color: rgba(255,255,255,0.35); font-size: 13px; }
+.footer-left .fl-title { font-size: 15px; font-weight: 800; color: #111; }
+.footer-left .fl-sub { font-size: 13px; color: #aaa; margin-top: 4px; }
+.footer-right { font-size: 13px; color: #bbb; }
 
-@media(max-width:768px){
-  .hero h1 { font-size: 32px; }
-  .pain-grid { grid-template-columns: 1fr; }
-  .hl-grid { grid-template-columns: 1fr; }
-  .hero-stats { gap: 28px; }
-  nav { padding: 0 16px; }
+@media (max-width: 768px) {
+  .hero h1 { font-size: 36px; }
+  .hero-numbers { gap: 28px; }
+  .built-grid { grid-template-columns: 1fr; }
+  .tech-row { grid-template-columns: 1fr 1fr; }
+  .rep-steps { grid-template-columns: 1fr; }
+  nav { padding: 0 20px; }
+  section { padding: 64px 20px; }
+  .hero { padding: 80px 20px 64px; }
 }
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="nav-brand">💎 黑钻数据工具</div>
+  <span class="nav-logo">💎 黑钻数据工具</span>
   <div class="nav-links">
     <a href="#problem">背景</a>
-    <a href="#solution">解决方案</a>
+    <a href="#built">做了什么</a>
     <a href="#flow">工作流</a>
     <a href="#highlights">亮点</a>
     <a href="#gaps">不足</a>
+    <a href="#replicate">复用</a>
   </div>
-  <div class="nav-date">2026年4月 · 内部分享</div>
+  <span class="nav-meta">2026年4月 · 内部分享</span>
 </nav>
 
-<!-- ══ Hero ══ -->
-<section class="hero">
-  <div class="hero-eyebrow">黑钻项目组 · AI 工具实践分享</div>
-  <h1>我用 AI 搭了一个<br><em>数据管理工具</em></h1>
-  <p class="hero-sub">把每周重复做的数据汇总、周报生成、结算计算，全部交给工具自动完成。</p>
-  <div class="hero-stats">
-    <div class="hero-stat">
-      <div class="val">3min</div>
-      <div class="lbl">完成一次完整周报</div>
+<!-- Hero -->
+<div class="hero">
+  <span class="hero-kicker">黑钻项目组 · AI 工具实践</span>
+  <h1>我用 AI 把每周<br><span class="accent">2 小时</span>的汇报<br>压缩到 20 分钟</h1>
+  <p class="hero-desc">
+    每周的数据汇总、周报生成、结算计算，都是重复性工作。
+    我没有找外包，也没有写一行代码——用 CatDesk 和 AI 对话，搭了一个专属工具，把这些全部自动化了。
+  </p>
+  <div class="hero-numbers">
+    <div class="hero-num">
+      <div class="n">2<span>h</span></div>
+      <div class="l">之前每周汇报耗时</div>
     </div>
-    <div class="hero-stat">
-      <div class="val">5+</div>
-      <div class="lbl">自动化功能模块</div>
+    <div class="hero-num">
+      <div class="n">20<span>min</span></div>
+      <div class="l">现在只需要这么久</div>
     </div>
-    <div class="hero-stat">
-      <div class="val">0</div>
-      <div class="lbl">手动计算 Excel</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ 背景 ══ -->
-<section class="section" id="problem">
-  <div class="inner">
-    <div class="eyebrow">Why · 为什么要做这件事</div>
-    <h2 class="sec-title">黑钻项目组的<br>三个真实痛点</h2>
-    <p class="sec-sub">每周都在重复同样的事情，手动整理数据、计算指标、写周报，耗时又容易出错。</p>
-
-    <div class="pain-grid">
-      <div class="pain-card">
-        <div class="pain-icon">📋</div>
-        <h3>数据散落，手动汇总</h3>
-        <p>供应商数据、校园写手数据分开存放，每次都要手动复制粘贴到 Excel，再手动算 CPM、CPE、爆文率，一不小心就出错。</p>
-      </div>
-      <div class="pain-card">
-        <div class="pain-icon">📝</div>
-        <h3>周报靠手写，格式不统一</h3>
-        <p>每周写周报都要重新组织语言，和上周数据对比要手动翻记录，环比计算容易搞错，不同人写出来格式也不一样。</p>
-      </div>
-      <div class="pain-card">
-        <div class="pain-icon">💳</div>
-        <h3>结算计算繁琐易出错</h3>
-        <p>校园写手结算有阶梯规则，组长还有额外激励，每次都要对着规则一条一条算，数据量大的时候特别容易漏算或算错。</p>
-      </div>
+    <div class="hero-num">
+      <div class="n">0</div>
+      <div class="l">手写的代码</div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- ══ 解决方案 ══ -->
-<section class="section gray" id="solution">
-  <div class="inner">
-    <div class="eyebrow">What · 我做了什么</div>
-    <h2 class="sec-title">一个覆盖全流程的<br>数据管理工具</h2>
-    <p class="sec-sub">用 CatDesk 和 AI 协作，从零搭建了一套 Flask + 纯前端的数据工具，把重复工作全部自动化。</p>
+<!-- 背景 -->
+<section class="alt" id="problem">
+  <div class="wrap">
+    <span class="label">Why · 为什么要做</span>
+    <h2>每周都在重复<br>同样的事情</h2>
+    <p class="lead">黑钻项目组每周要汇报多个项目的数据，流程固定，但全靠手动，耗时又容易出错。</p>
 
-    <div class="solution-list">
-      <div class="sol-item">
-        <div class="sol-num">📝</div>
-        <div class="sol-body">
-          <h3>智能数据录入，三种方式任选</h3>
-          <p>支持手动填写、粘贴表格文字自动解析（AI 识别字段）、飞书文档一键拉取。供应商和校园写手数据分开录入，互不干扰。</p>
-          <div class="sol-tags">
-            <span class="sol-tag">文字粘贴解析</span>
-            <span class="sol-tag">飞书拉取</span>
-            <span class="sol-tag">手动填写</span>
-          </div>
+    <div class="pain-list">
+      <div class="pain-item">
+        <div class="pain-emoji">📋</div>
+        <div>
+          <h3>数据散落两端，手动合并</h3>
+          <p>供应商数据和校园写手数据分开发过来，每次要手动复制粘贴到 Excel，再逐个计算 CPM、CPE、爆文率。数据量一大，算错了都不知道。</p>
         </div>
       </div>
-      <div class="sol-item">
-        <div class="sol-num">📊</div>
-        <div class="sol-body">
-          <h3>一键生成汇总文案，自动计算所有指标</h3>
-          <p>填完数据点一下，自动计算 CPM、CPE、CPC、爆文率，生成标准格式的汇总文案，直接复制发送，不用再手动写。</p>
-          <div class="sol-tags">
-            <span class="sol-tag">CPM / CPE 自动计算</span>
-            <span class="sol-tag">爆文率统计</span>
-            <span class="sol-tag">一键复制</span>
-          </div>
+      <div class="pain-item">
+        <div class="pain-emoji">✍️</div>
+        <div>
+          <h3>周报靠手写，每次都要重新组织语言</h3>
+          <p>和上周数据对比要翻历史记录，环比要手动算，写出来的格式每次都不一样。2-3 小时里，真正有价值的思考时间不到 20 分钟。</p>
         </div>
       </div>
-      <div class="sol-item">
-        <div class="sol-num">📈</div>
-        <div class="sol-body">
-          <h3>周报自动生成，环比对比清晰</h3>
-          <p>选择上周项目，自动生成环比分析文案。爆文率用百分点差值（pp），CPM/CPE 用变化率，逻辑和实际业务对齐。</p>
-          <div class="sol-tags">
-            <span class="sol-tag">自动环比计算</span>
-            <span class="sol-tag">周报文案生成</span>
-            <span class="sol-tag">数据对比卡片</span>
-          </div>
-        </div>
-      </div>
-      <div class="sol-item">
-        <div class="sol-num">💳</div>
-        <div class="sol-body">
-          <h3>结算表自动生成，阶梯规则内置</h3>
-          <p>上传数据回收表，自动按阶梯规则（50~200浏览→20元，200~1500→40元…）计算每位写手结算金额，组长激励也自动算，生成完整 Excel。</p>
-          <div class="sol-tags">
-            <span class="sol-tag">阶梯结算规则</span>
-            <span class="sol-tag">组长激励计算</span>
-            <span class="sol-tag">导出 Excel</span>
-          </div>
-        </div>
-      </div>
-      <div class="sol-item">
-        <div class="sol-num">🗂</div>
-        <div class="sol-body">
-          <h3>数据看板，历史趋势一目了然</h3>
-          <p>所有历史项目按周期（周四→下周三）自动聚合，CPM/CPE/爆文率折线图展示周趋势，点击项目卡片展开供应商和校园写手明细。</p>
-          <div class="sol-tags">
-            <span class="sol-tag">按周聚合</span>
-            <span class="sol-tag">趋势折线图</span>
-            <span class="sol-tag">项目明细展开</span>
-          </div>
+      <div class="pain-item">
+        <div class="pain-emoji">💳</div>
+        <div>
+          <h3>结算规则复杂，一条一条对着算</h3>
+          <p>校园写手结算有阶梯规则，组长还有额外激励，每次都要对着规则表逐行计算。写手多的时候，一个项目要算半小时。</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ 工作流 ══ -->
-<section class="section" id="flow">
-  <div class="inner">
-    <div class="eyebrow">How · 实际怎么用</div>
-    <h2 class="sec-title">每周汇报的<br>标准五步流程</h2>
-    <p class="sec-sub">从拿到数据到发出周报，最快 3 分钟搞定，不再需要打开 Excel。</p>
+<!-- 做了什么 -->
+<section id="built">
+  <div class="wrap wide">
+    <span class="label">What · 做了什么</span>
+    <h2>一个覆盖全流程的<br>专属数据工具</h2>
+    <p class="lead">用 CatDesk 和 AI 对话搭建，Flask 后端 + 纯前端，把所有重复工作变成一次点击。</p>
 
-    <div class="flow-steps">
-      <div class="flow-step">
-        <div class="flow-dot">1</div>
-        <div class="flow-content">
+    <div class="built-grid">
+      <div class="built-card">
+        <div class="bc-icon">📝</div>
+        <h3>智能数据录入</h3>
+        <p>把供应商发来的表格文字直接粘贴进去，AI 自动识别字段填入。也支持飞书文档一键拉取，或手动填写。</p>
+        <div class="bc-tags">
+          <span class="bc-tag">文字粘贴解析</span>
+          <span class="bc-tag">飞书拉取</span>
+          <span class="bc-tag">供应商 + 校园写手分开管理</span>
+        </div>
+      </div>
+      <div class="built-card">
+        <div class="bc-icon">📊</div>
+        <h3>一键汇总文案</h3>
+        <p>填完数据点一下，自动计算所有指标，生成标准格式汇总文案，直接复制发送，不用再手动写。</p>
+        <div class="bc-tags">
+          <span class="bc-tag">CPM / CPE 自动计算</span>
+          <span class="bc-tag">爆文率统计</span>
+          <span class="bc-tag">一键复制</span>
+        </div>
+      </div>
+      <div class="built-card">
+        <div class="bc-icon">📈</div>
+        <h3>周报自动生成</h3>
+        <p>选择上周项目，自动生成含环比分析的完整周报文案。爆文率用百分点差值，CPM/CPE 用变化率，和实际汇报习惯对齐。</p>
+        <div class="bc-tags">
+          <span class="bc-tag">自动环比计算</span>
+          <span class="bc-tag">周报文案生成</span>
+        </div>
+      </div>
+      <div class="built-card">
+        <div class="bc-icon">💳</div>
+        <h3>结算表自动生成</h3>
+        <p>上传数据回收表，自动按阶梯规则计算每位写手结算金额，组长激励也自动算，生成完整 Excel，不用再对着规则表逐行算。</p>
+        <div class="bc-tags">
+          <span class="bc-tag">阶梯结算规则内置</span>
+          <span class="bc-tag">组长激励自动计算</span>
+          <span class="bc-tag">导出 Excel</span>
+        </div>
+      </div>
+      <div class="built-card">
+        <div class="bc-icon">🗂</div>
+        <h3>数据看板</h3>
+        <p>历史项目按周期自动聚合，CPM / CPE / 爆文率折线图展示周趋势，一眼看清每周表现变化。</p>
+        <div class="bc-tags">
+          <span class="bc-tag">按周四～周三聚合</span>
+          <span class="bc-tag">趋势折线图</span>
+        </div>
+      </div>
+      <div class="built-card">
+        <div class="bc-icon">✅</div>
+        <h3>每日 Todo 看板</h3>
+        <p>内置团队待办管理，支持按人分配、优先级标记，大象消息扫描自动提取待办，不再靠脑子记。</p>
+        <div class="bc-tags">
+          <span class="bc-tag">大象消息扫描</span>
+          <span class="bc-tag">按人分配</span>
+          <span class="bc-tag">优先级标记</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 工作流 -->
+<section class="alt" id="flow">
+  <div class="wrap">
+    <span class="label">How · 实际怎么用</span>
+    <h2>每周汇报的<br>标准五步流程</h2>
+    <p class="lead">从拿到数据到发出周报，20 分钟以内，不需要打开 Excel。</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
           <h4>粘贴供应商数据</h4>
           <p>把供应商发来的表格文字直接粘贴进去，AI 自动识别篇数、曝光、互动、CPM 等字段并填入对应位置。</p>
-          <span class="fc-tag">⚡ 省去手动复制粘贴</span>
+          <span class="s-note">省去手动复制粘贴和字段对应</span>
         </div>
       </div>
-      <div class="flow-step">
-        <div class="flow-dot">2</div>
-        <div class="flow-content">
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
           <h4>填写校园写手数据</h4>
-          <p>切换到校园写手区块，同样支持粘贴解析，或手动填写各项指标。两个来源数据完全独立，不会混淆。</p>
-          <span class="fc-tag">📊 供应商 + 校园写手分开管理</span>
+          <p>切换到校园写手区块，同样支持粘贴解析。两个来源数据完全独立，不会混淆，合并计算由工具自动完成。</p>
+          <span class="s-note">供应商 + 校园写手分开管理</span>
         </div>
       </div>
-      <div class="flow-step">
-        <div class="flow-dot">3</div>
-        <div class="flow-content">
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
           <h4>一键生成汇总文案</h4>
-          <p>点「生成汇总文案」，自动合并两端数据，计算综合 CPM、CPE、爆文率，输出标准格式文案，直接复制。</p>
-          <span class="fc-tag">✅ 指标自动计算，格式统一</span>
+          <p>点「生成汇总文案」，自动合并两端数据，计算综合 CPM、CPE、爆文率，输出标准格式文案，直接复制发送。</p>
+          <span class="s-note">指标自动计算，格式统一</span>
         </div>
       </div>
-      <div class="flow-step">
-        <div class="flow-dot">4</div>
-        <div class="flow-content">
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
           <h4>写入表格，保存记录</h4>
           <p>点「写入表格」，数据自动写入黑钻数据反馈汇总 Excel，同时保存到历史项目列表，支持一键撤回。</p>
-          <span class="fc-tag">💾 自动写 Excel + 本地存档</span>
+          <span class="s-note">自动写 Excel，不用手动填</span>
         </div>
       </div>
-      <div class="flow-step">
-        <div class="flow-dot">5</div>
-        <div class="flow-content">
+      <div class="step">
+        <div class="step-num">5</div>
+        <div>
           <h4>生成周报，对比上周</h4>
-          <p>选择上周项目，自动生成含环比分析的完整周报文案，CPM/CPE 变化率、爆文率百分点差值全部自动算好。</p>
-          <span class="fc-tag">📈 环比逻辑和业务对齐</span>
+          <p>选择上周项目，自动生成含环比分析的完整周报文案。爆文率百分点差值、CPM 变化率全部自动算好，复制发送。</p>
+          <span class="s-note">从 2h 压缩到 20min</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ 亮点 ══ -->
-<section class="section dark" id="highlights">
-  <div class="inner">
-    <div class="eyebrow" style="color:#fca5a5;">Highlights · 核心亮点</div>
-    <h2 class="sec-title">这个工具真正<br>解决了什么</h2>
-    <p class="sec-sub">不只是"能用"，而是真的把重复劳动消灭掉了。</p>
-
-    <div class="hl-grid">
-      <div class="hl-card">
-        <div class="hl-num">01</div>
-        <h3>周标签自动生成，不用手动算</h3>
-        <p>以 2026-01-01 为 W1，按周四～周三的业务周期自动计算周标签。填完结束日期，26W14 这样的标签自动出现，不用再数日历。</p>
-      </div>
-      <div class="hl-card">
-        <div class="hl-num">02</div>
-        <h3>爆文率环比用百分点，不用百分比</h3>
-        <p>爆文率从 3% 涨到 3.5%，应该显示 +0.5pp，而不是 +16.7%。工具里专门区分了这两种逻辑，和实际汇报习惯对齐。</p>
-      </div>
-      <div class="hl-card">
-        <div class="hl-num">03</div>
-        <h3>需求数记住了，不用每次重填</h3>
-        <p>需求数填一次就存到浏览器本地，下次打开自动恢复。清空表单也不会清掉它，省去每次重复输入的麻烦。</p>
-      </div>
-      <div class="hl-card">
-        <div class="hl-num">04</div>
-        <h3>全程 AI 协作搭建，零后端经验</h3>
-        <p>从需求描述到代码实现，全程在 CatDesk 里和 AI 对话完成。Flask 后端、openpyxl 写 Excel、前端交互，AI 全部搞定，我只负责提需求和验收。</p>
+<!-- 技术栈 -->
+<section id="tech">
+  <div class="wrap">
+    <div class="tech-block">
+      <span class="label">Tech · 怎么搭的</span>
+      <h2>全程 AI 对话完成<br>没有写一行代码</h2>
+      <p class="lead">在 CatDesk 里描述需求，AI 写代码、调 bug、改逻辑，我只负责提需求和验收。</p>
+      <div class="tech-row">
+        <div class="tech-item">
+          <div class="ti-label">后端</div>
+          <div class="ti-val">Flask + openpyxl</div>
+          <div class="ti-desc">Python 后端处理 Excel 读写、数据计算、结算生成</div>
+        </div>
+        <div class="tech-item">
+          <div class="ti-label">前端</div>
+          <div class="ti-val">原生 JS + CSS</div>
+          <div class="ti-desc">无框架，纯手写，Chart.js 做数据看板图表</div>
+        </div>
+        <div class="tech-item">
+          <div class="ti-label">AI 工具</div>
+          <div class="ti-val">CatDesk</div>
+          <div class="ti-desc">全程对话式开发，需求 → 代码 → 调试 → 迭代</div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ 不足 ══ -->
-<section class="section gray" id="gaps">
-  <div class="inner">
-    <div class="eyebrow">Gaps · 当前不足</div>
-    <h2 class="sec-title">还没解决的问题</h2>
-    <p class="sec-sub">诚实面对局限，才能找到真正的改进方向。</p>
+<!-- 亮点 -->
+<section class="alt" id="highlights">
+  <div class="wrap">
+    <span class="label">Highlights · 真正解决了什么</span>
+    <h2>不只是"能用"</h2>
+    <p class="lead">几个细节，让工具真正贴合实际工作习惯，而不是将就着用。</p>
+
+    <div class="hl-list">
+      <div class="hl-item">
+        <div class="hl-num">01</div>
+        <div>
+          <h3>爆文率环比用百分点，不用百分比</h3>
+          <p>爆文率从 3% 涨到 3.5%，显示的是 <strong>+0.5pp</strong>，而不是 +16.7%。这两种算法都对，但前者才是实际汇报时用的表达方式。工具里专门区分了这两种逻辑，CPM/CPE 用变化率，爆文率用差值。</p>
+        </div>
+      </div>
+      <div class="hl-item">
+        <div class="hl-num">02</div>
+        <div>
+          <h3>周标签自动生成，不用手动数日历</h3>
+          <p>以 2026-01-01 为 W1，按<strong>周四～周三</strong>的业务周期自动计算周标签。填完结束日期，26W14 这样的标签自动出现，不用再对着日历数是第几周。</p>
+        </div>
+      </div>
+      <div class="hl-item">
+        <div class="hl-num">03</div>
+        <div>
+          <h3>需求数记住了，不用每次重填</h3>
+          <p>需求数填一次就存到浏览器本地，下次打开自动恢复。清空表单也不会清掉它。听起来是小事，但每次重填都是打断节奏的摩擦。</p>
+        </div>
+      </div>
+      <div class="hl-item">
+        <div class="hl-num">04</div>
+        <div>
+          <h3>AI 不只是写代码，还在持续迭代</h3>
+          <p>工具不是一次性搭好就不动了。每次发现逻辑不对、体验不好，直接描述问题，AI 定位代码、修改、验证。整个过程像有一个随时在线的开发同事。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 不足 -->
+<section id="gaps">
+  <div class="wrap">
+    <span class="label">Gaps · 还没解决的问题</span>
+    <h2>诚实面对局限</h2>
+    <p class="lead">才能找到真正的改进方向。</p>
 
     <div class="gap-list">
       <div class="gap-item">
         <h4>只能本机用，别人访问不了</h4>
-        <p>工具目前跑在本地 Flask 服务器上，依赖本机的 Excel 文件路径，团队其他人无法直接访问。</p>
-        <p class="gap-future">部署到云服务器，或改造成纯前端版本放到 GitHub Pages。</p>
+        <p>工具跑在本地 Flask 服务器上，依赖本机的 Excel 文件路径，团队其他人无法直接访问，目前只有我自己在用。</p>
+        <p class="gap-next">部署到云服务器，或改造成纯前端版本放到 GitHub Pages。</p>
       </div>
       <div class="gap-item">
-        <h4>数据没有多人协作能力</h4>
-        <p>历史项目数据存在本地 JSON 文件里，多人同时使用会产生数据冲突，目前只适合单人使用。</p>
-        <p class="gap-future">引入轻量数据库（如 SQLite 或云端存储），支持多人共享数据。</p>
+        <h4>飞书数据拉取依赖文档权限</h4>
+        <p>飞书文档拉取功能需要文档有公开访问权限，私有文档目前无法直接拉取，还是要手动粘贴。</p>
+        <p class="gap-next">接入飞书 OAuth 授权，支持登录后拉取私有文档。</p>
       </div>
       <div class="gap-item">
-        <h4>飞书数据拉取依赖网络和权限</h4>
-        <p>飞书文档拉取功能需要文档有公开访问权限，私有文档或需要登录的文档目前无法直接拉取。</p>
-        <p class="gap-future">接入飞书 OAuth 授权，支持登录后拉取私有文档数据。</p>
+        <h4>AI 对话式开发，调试成本不低</h4>
+        <p>描述需求 → AI 写代码 → 发现问题 → 再描述 → 再修改，这个循环有时候要转好几圈。对 AI 的描述越精准，效率越高，但这本身也是一种学习成本。</p>
+        <p class="gap-next">积累更精准的需求描述模式，减少来回次数。</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ Footer ══ -->
+<!-- 复用 -->
+<section class="alt" id="replicate">
+  <div class="wrap">
+    <span class="label">Replicate · 你也可以做</span>
+    <h2>你工作里有没有<br>类似的重复性工作？</h2>
+    <p class="lead">这套方法不只适用于数据汇报，任何有固定流程、重复操作的工作都可以用同样的思路自动化。</p>
+
+    <div class="rep-steps">
+      <div class="rep-step">
+        <div class="rs-n">1</div>
+        <h4>找到你的重复性工作</h4>
+        <p>每周/每月都要做、流程固定、耗时但不需要太多判断的工作，都是候选。比如数据整理、报告生成、表格填写。</p>
+      </div>
+      <div class="rep-step">
+        <div class="rs-n">2</div>
+        <h4>把流程拆成步骤描述清楚</h4>
+        <p>不需要懂技术，只需要能把"我现在怎么做这件事"说清楚。步骤越具体，AI 实现起来越准确。</p>
+      </div>
+      <div class="rep-step">
+        <div class="rs-n">3</div>
+        <h4>在 CatDesk 里描述需求</h4>
+        <p>告诉 AI 你想做什么、输入是什么、输出是什么。不用懂代码，AI 会问你细节，你只需要回答。</p>
+      </div>
+      <div class="rep-step">
+        <div class="rs-n">4</div>
+        <h4>用起来，发现问题就迭代</h4>
+        <p>第一版不会完美，用的过程中发现哪里不对，直接描述问题让 AI 修。工具会越来越贴合你的实际需求。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer>
-  <div class="f-title">💎 黑钻数据工具</div>
-  <div class="f-sub" style="margin-top:8px;">用 AI 把重复的事情做掉 · 2026.04 · by liyueshan</div>
+  <div class="footer-left">
+    <div class="fl-title">💎 黑钻数据工具</div>
+    <div class="fl-sub">用 AI 把重复的事情做掉 · 2026.04</div>
+  </div>
+  <div class="footer-right">by liyueshan</div>
 </footer>
 
 </body>
