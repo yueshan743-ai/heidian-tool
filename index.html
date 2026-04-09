@@ -3,870 +3,481 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>黑钻数据工具 · Demo</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<title>黑钻数据工具 · 美团黑钻创作者数据管理平台</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #fff; color: #1a1a2e; }
 
-.header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 18px 32px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
-.header-icon { width: 38px; height: 38px; background: linear-gradient(135deg, #e94560, #f5a623); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-.header h1 { color: #fff; font-size: 18px; font-weight: 700; }
-.header p  { color: rgba(255,255,255,0.55); font-size: 12px; margin-top: 2px; }
-.demo-badge { background: rgba(233,69,96,.25); color: #fca5a5; border: 1px solid rgba(233,69,96,.4); border-radius: 99px; padding: 3px 12px; font-size: 11px; font-weight: 700; margin-left: auto; }
+/* ── Hero ── */
+.hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 80px 24px 100px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(233,69,96,0.15) 0%, transparent 70%);
+  top: -200px; right: -100px;
+  border-radius: 50%;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+  bottom: -100px; left: -50px;
+  border-radius: 50%;
+}
+.hero-icon {
+  width: 72px; height: 72px;
+  background: linear-gradient(135deg, #e94560, #f5a623);
+  border-radius: 20px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 32px rgba(233,69,96,0.4);
+}
+.hero h1 {
+  color: #fff;
+  font-size: 42px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  position: relative; z-index: 1;
+}
+.hero h1 span { color: #e94560; }
+.hero p {
+  color: rgba(255,255,255,0.65);
+  font-size: 18px;
+  max-width: 560px;
+  margin: 0 auto 36px;
+  line-height: 1.7;
+  position: relative; z-index: 1;
+}
+.hero-badges {
+  display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+  margin-bottom: 40px;
+  position: relative; z-index: 1;
+}
+.badge {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.85);
+  padding: 6px 16px;
+  border-radius: 99px;
+  font-size: 13px;
+  backdrop-filter: blur(10px);
+}
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #e94560, #c73652);
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(233,69,96,0.4);
+  transition: all .2s;
+  position: relative; z-index: 1;
+}
+.hero-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(233,69,96,0.5); }
 
-.tab-nav { background: #fff; border-bottom: 1px solid #eee; padding: 0 28px; display: flex; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
-.tab-btn { padding: 13px 22px; font-size: 14px; font-weight: 500; color: #888; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
-.tab-btn:hover { color: #e94560; }
-.tab-btn.active { color: #e94560; border-bottom-color: #e94560; font-weight: 700; }
-.tab-pane { display: none; }
-.tab-pane.active { display: block; }
+/* ── Mock UI ── */
+.mock-wrap {
+  max-width: 900px;
+  margin: -60px auto 0;
+  padding: 0 24px;
+  position: relative; z-index: 10;
+}
+.mock-window {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+.mock-bar {
+  background: #f5f5f5;
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid #eee;
+}
+.mock-dot { width: 12px; height: 12px; border-radius: 50%; }
+.mock-dot.r { background: #ff5f57; }
+.mock-dot.y { background: #febc2e; }
+.mock-dot.g { background: #28c840; }
+.mock-url {
+  flex: 1; background: #fff; border-radius: 6px;
+  padding: 5px 12px; font-size: 12px; color: #888;
+  border: 1px solid #e8e8e8; margin: 0 8px;
+}
+.mock-tabs {
+  display: flex; background: #fff; border-bottom: 1px solid #eee;
+  padding: 0 20px;
+}
+.mock-tab {
+  padding: 12px 18px; font-size: 13px; font-weight: 600;
+  color: #888; border-bottom: 3px solid transparent;
+}
+.mock-tab.active { color: #e94560; border-bottom-color: #e94560; }
+.mock-body { padding: 20px; background: #f8f9fa; min-height: 280px; }
+.mock-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.mock-card {
+  background: #fff; border-radius: 10px; padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.mock-card .mc-label { font-size: 10px; color: #aaa; font-weight: 600; margin-bottom: 6px; }
+.mock-card .mc-val { font-size: 22px; font-weight: 800; color: #1a1a2e; }
+.mock-card .mc-val.red { color: #e94560; }
+.mock-card .mc-val.blue { color: #0f3460; }
+.mock-card .mc-change { font-size: 11px; margin-top: 3px; }
+.mc-change.up { color: #e94560; }
+.mc-change.down { color: #10b981; }
+.mock-row { display: flex; gap: 12px; }
+.mock-chart {
+  flex: 2; background: #fff; border-radius: 10px; padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.mock-chart .mc-label { font-size: 11px; color: #aaa; font-weight: 600; margin-bottom: 10px; }
+.chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
+.chart-bar { flex: 1; border-radius: 4px 4px 0 0; }
+.mock-list { flex: 1; background: #fff; border-radius: 10px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.mock-proj-item { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid #f5f5f5; }
+.mock-proj-dot { width: 8px; height: 8px; border-radius: 50%; background: #e94560; flex-shrink: 0; }
+.mock-proj-name { font-size: 12px; font-weight: 600; flex: 1; }
+.mock-proj-val { font-size: 11px; color: #888; }
 
-.container { max-width: 1100px; margin: 0 auto; padding: 22px 18px 120px; }
-.card { background: #fff; border-radius: 14px; box-shadow: 0 2px 14px rgba(0,0,0,0.07); margin-bottom: 18px; overflow: hidden; }
-.card-header { padding: 14px 22px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
-.card-title { font-size: 14px; font-weight: 700; color: #1a1a2e; display: flex; align-items: center; gap: 8px; }
-.card-title .dot { width: 7px; height: 7px; border-radius: 50%; background: #e94560; flex-shrink: 0; }
-.card-body { padding: 20px 22px; }
+/* ── Section ── */
+.section { padding: 80px 24px; }
+.section.gray { background: #f8f9fa; }
+.section-inner { max-width: 1000px; margin: 0 auto; }
+.section-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, #fff0f3, #ffe4ea);
+  color: #e94560;
+  border: 1px solid #fca5a5;
+  padding: 4px 14px; border-radius: 99px;
+  font-size: 12px; font-weight: 700;
+  margin-bottom: 16px;
+}
+.section-title {
+  font-size: 32px; font-weight: 800; color: #1a1a2e;
+  margin-bottom: 12px; line-height: 1.3;
+}
+.section-sub {
+  font-size: 16px; color: #666; line-height: 1.7;
+  max-width: 560px; margin-bottom: 48px;
+}
 
-.form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
-.form-group { display: flex; flex-direction: column; gap: 5px; }
-.form-group label { font-size: 11px; color: #999; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; }
-.form-group input, .form-group select { border: 1.5px solid #e8e8e8; border-radius: 8px; padding: 8px 11px; font-size: 13px; transition: border-color 0.2s; outline: none; width: 100%; background: #fff; }
-.form-group input:focus, .form-group select:focus { border-color: #e94560; box-shadow: 0 0 0 3px rgba(233,69,96,0.1); }
-.form-group.wide { grid-column: span 2; }
-.section-label { font-size: 11px; font-weight: 700; color: #fff; padding: 2px 9px; border-radius: 4px; display: inline-block; margin-bottom: 10px; }
-.section-label.sup { background: #e94560; }
-.section-label.cam { background: #0f3460; }
-.section-label.base { background: #6366f1; }
-.section-divider { border: none; border-top: 1px solid #f0f0f0; margin: 16px 0; }
+/* ── Features grid ── */
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.feat-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  border: 1.5px solid #f0f0f0;
+  transition: all .2s;
+}
+.feat-card:hover { border-color: #e94560; box-shadow: 0 8px 32px rgba(233,69,96,0.1); transform: translateY(-2px); }
+.feat-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+.feat-icon.red    { background: linear-gradient(135deg,#fff0f3,#ffe4ea); }
+.feat-icon.blue   { background: linear-gradient(135deg,#eff6ff,#dbeafe); }
+.feat-icon.indigo { background: linear-gradient(135deg,#f5f3ff,#ede9fe); }
+.feat-icon.green  { background: linear-gradient(135deg,#f0fdf4,#dcfce7); }
+.feat-icon.orange { background: linear-gradient(135deg,#fff7ed,#ffedd5); }
+.feat-icon.purple { background: linear-gradient(135deg,#fdf4ff,#fae8ff); }
+.feat-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.feat-card p { font-size: 13px; color: #666; line-height: 1.7; }
 
-.btn { padding: 9px 20px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 700; transition: all .2s; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
-.btn:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
-.btn-red    { background: linear-gradient(135deg,#e94560,#c73652); color:#fff; box-shadow:0 4px 10px rgba(233,69,96,.3); }
-.btn-red:hover:not(:disabled)    { transform:translateY(-1px); box-shadow:0 6px 14px rgba(233,69,96,.4); }
-.btn-blue   { background: linear-gradient(135deg,#0f3460,#1a5276); color:#fff; box-shadow:0 4px 10px rgba(15,52,96,.3); }
-.btn-blue:hover:not(:disabled)   { transform:translateY(-1px); }
-.btn-indigo { background: linear-gradient(135deg,#6366f1,#4f46e5); color:#fff; box-shadow:0 4px 10px rgba(99,102,241,.3); }
-.btn-indigo:hover:not(:disabled) { transform:translateY(-1px); }
-.btn-ghost  { background:#f5f5f5; color:#555; }
-.btn-ghost:hover:not(:disabled)  { background:#ebebeb; }
-.btn-green  { background: linear-gradient(135deg,#10b981,#059669); color:#fff; box-shadow:0 4px 10px rgba(16,185,129,.3); }
-.btn-green:hover:not(:disabled)  { transform:translateY(-1px); }
+/* ── Flow ── */
+.flow { display: flex; gap: 0; align-items: stretch; }
+.flow-step {
+  flex: 1;
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 20px;
+  text-align: center;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  border: 1.5px solid #f0f0f0;
+  position: relative;
+}
+.flow-arrow {
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 8px; color: #ddd; font-size: 20px; flex-shrink: 0;
+}
+.flow-num {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #e94560, #c73652);
+  color: #fff; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800;
+  margin: 0 auto 14px;
+}
+.flow-step h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.flow-step p { font-size: 12px; color: #888; line-height: 1.6; }
 
-.action-bar { position:fixed; bottom:0; left:0; right:0; background:rgba(255,255,255,.95); backdrop-filter:blur(10px); border-top:1px solid #eee; padding:12px 24px; display:flex; align-items:center; gap:10px; z-index:100; box-shadow:0 -4px 20px rgba(0,0,0,.08); flex-wrap:wrap; }
-.action-bar .spacer { flex:1; }
+/* ── Stats ── */
+.stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
+.stat-card {
+  background: linear-gradient(135deg, #1a1a2e, #0f3460);
+  border-radius: 16px; padding: 28px 20px; text-align: center;
+}
+.stat-val { font-size: 36px; font-weight: 800; color: #e94560; margin-bottom: 6px; }
+.stat-label { font-size: 13px; color: rgba(255,255,255,0.6); }
 
-.output-card { display:none; }
-.output-card.show { display:block; }
-.report-box { background:linear-gradient(135deg,#1a1a2e,#0f3460); border-radius:10px; padding:18px 22px; color:#fff; position:relative; }
-.report-text { font-size:14px; line-height:1.9; white-space:pre-wrap; }
-.copy-btn { position:absolute; top:12px; right:12px; background:rgba(255,255,255,.15); border:none; color:#fff; padding:4px 12px; border-radius:5px; cursor:pointer; font-size:11px; transition:background .2s; }
-.copy-btn:hover { background:rgba(255,255,255,.25); }
-.copy-btn.copied { background:rgba(46,213,115,.4); }
+/* ── CTA bottom ── */
+.cta-section {
+  background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+  padding: 80px 24px; text-align: center;
+}
+.cta-section h2 { color: #fff; font-size: 32px; font-weight: 800; margin-bottom: 12px; }
+.cta-section p { color: rgba(255,255,255,0.6); font-size: 16px; margin-bottom: 36px; }
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #e94560, #c73652);
+  color: #fff; padding: 14px 36px; border-radius: 12px;
+  font-size: 16px; font-weight: 700; text-decoration: none;
+  box-shadow: 0 8px 24px rgba(233,69,96,0.4);
+  transition: all .2s;
+}
+.cta-btn:hover { transform: translateY(-2px); }
 
-.prev-selector { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-.prev-selector label { font-size:12px; color:#666; white-space:nowrap; }
-.prev-selector select { flex:1; border:1.5px solid #e8e8e8; border-radius:7px; padding:7px 10px; font-size:12px; outline:none; }
-.compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px; }
-.cmp-card { border-radius:10px; padding:14px 18px; }
-.cmp-card.cur  { background:linear-gradient(135deg,#fff0f3,#ffe4ea); border:1.5px solid #f5c6ce; }
-.cmp-card.prev { background:#f8f9fa; border:1.5px solid #e8e8e8; }
-.cmp-card h4 { font-size:11px; color:#888; margin-bottom:10px; font-weight:700; }
-.metrics-row { display:flex; flex-wrap:wrap; gap:12px; }
-.metric { display:flex; flex-direction:column; }
-.metric .ml { font-size:10px; color:#aaa; }
-.metric .mv { font-size:15px; font-weight:700; color:#1a1a2e; }
-.metric .mc { font-size:10px; margin-top:1px; }
-.mc.up   { color:#e94560; }
-.mc.down { color:#2ed573; }
+/* ── Footer ── */
+footer {
+  background: #1a1a2e; padding: 24px;
+  text-align: center; color: rgba(255,255,255,0.3); font-size: 12px;
+}
 
-.week-block { margin-bottom:28px; }
-.week-header { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
-.week-badge { background:linear-gradient(135deg,#1a1a2e,#0f3460); color:#fff; padding:4px 14px; border-radius:20px; font-size:12px; font-weight:700; }
-.week-summary-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:10px; margin-bottom:14px; }
-.ws-card { background:#fff; border-radius:10px; padding:12px 16px; box-shadow:0 1px 8px rgba(0,0,0,.06); }
-.ws-card .wsl { font-size:10px; color:#aaa; font-weight:600; }
-.ws-card .wsv { font-size:18px; font-weight:800; color:#1a1a2e; margin-top:2px; }
-.ws-card .wsc { font-size:10px; margin-top:2px; }
-.wsc.up   { color:#e94560; }
-.wsc.down { color:#2ed573; }
-.proj-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:12px; }
-.proj-card { background:#fff; border-radius:12px; box-shadow:0 1px 8px rgba(0,0,0,.06); overflow:hidden; cursor:pointer; transition:all .2s; border:1.5px solid transparent; }
-.proj-card:hover { border-color:#e94560; }
-.proj-card.expanded { border-color:#e94560; }
-.proj-card-header { padding:12px 16px; display:flex; align-items:center; justify-content:space-between; }
-.proj-card-name { font-size:14px; font-weight:700; }
-.proj-card-dates { font-size:11px; color:#aaa; margin-top:2px; }
-.proj-card-cost { font-size:16px; font-weight:800; color:#e94560; }
-.proj-card-body { display:none; padding:0 16px 14px; border-top:1px solid #f5f5f5; }
-.proj-card.expanded .proj-card-body { display:block; }
-.proj-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
-.detail-col h5 { font-size:11px; font-weight:700; color:#fff; padding:2px 8px; border-radius:4px; display:inline-block; margin-bottom:8px; }
-.detail-col.sup h5 { background:#e94560; }
-.detail-col.cam h5 { background:#0f3460; }
-.detail-row { display:flex; justify-content:space-between; font-size:12px; padding:3px 0; border-bottom:1px solid #f5f5f5; }
-.detail-row .dk { color:#888; }
-.detail-row .dv { font-weight:600; }
-
-.proj-list { display:flex; flex-direction:column; gap:7px; max-height:320px; overflow-y:auto; }
-.proj-item { display:flex; align-items:center; padding:10px 14px; border-radius:9px; border:1.5px solid #f0f0f0; cursor:pointer; transition:all .2s; gap:10px; flex-wrap:wrap; }
-.proj-item:hover { border-color:#e94560; background:#fff5f7; }
-.proj-item.active { border-color:#e94560; background:#fff0f3; }
-.proj-item .pn { font-weight:700; font-size:13px; flex:1; min-width:100px; }
-.proj-item .pd { font-size:11px; color:#aaa; }
-.proj-item .ps { display:flex; gap:12px; font-size:11px; color:#666; flex-wrap:wrap; }
-.proj-item .ps span b { font-size:12px; color:#1a1a2e; font-weight:700; }
-
-.empty-state { text-align:center; padding:36px; color:#ccc; }
-.empty-state .icon { font-size:32px; margin-bottom:8px; }
-.tip { background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:9px 13px; font-size:12px; color:#92400e; margin-bottom:14px; }
-.toast { position:fixed; top:22px; right:22px; background:#1a1a2e; color:#fff; padding:11px 18px; border-radius:9px; font-size:13px; box-shadow:0 8px 22px rgba(0,0,0,.2); transform:translateX(120%); transition:transform .3s; z-index:1000; max-width:320px; }
-.toast.show { transform:translateX(0); }
-.toast.success { background:#2ed573; color:#1a1a2e; }
-.toast.error   { background:#e94560; }
-.toast.info    { background:#7c3aed; }
-
-@media(max-width:640px){
-  .compare-grid,.proj-detail-grid { grid-template-columns:1fr; }
-  .form-grid { grid-template-columns:1fr 1fr; }
-  .action-bar { padding:10px 14px; gap:7px; }
-  .btn { padding:8px 14px; font-size:12px; }
+@media(max-width:768px){
+  .hero h1 { font-size: 28px; }
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .flow { flex-direction: column; }
+  .flow-arrow { transform: rotate(90deg); padding: 4px 0; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .mock-grid { grid-template-columns: 1fr 1fr; }
+}
+@media(max-width:480px){
+  .features-grid { grid-template-columns: 1fr; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-icon">💎</div>
-  <div>
-    <h1>黑钻数据工具</h1>
-    <p>美团黑钻创作者数据管理 · 录入 / 汇总 / 看板</p>
+<!-- ══ Hero ══ -->
+<section class="hero">
+  <div class="hero-icon">💎</div>
+  <h1>黑钻数据工具<br><span>让数据汇报变得简单</span></h1>
+  <p>专为美团黑钻创作者项目设计的数据管理平台，一键录入、自动汇总、智能生成周报，告别手动整理 Excel。</p>
+  <div class="hero-badges">
+    <span class="badge">📝 数据录入</span>
+    <span class="badge">📊 自动汇总</span>
+    <span class="badge">📈 周报生成</span>
+    <span class="badge">💳 结算管理</span>
+    <span class="badge">🗂 数据看板</span>
+    <span class="badge">✅ 每日 Todo</span>
   </div>
-  <span class="demo-badge">✨ 演示版 · 数据存本地</span>
-</div>
+  <a href="#features" class="hero-cta">了解功能 →</a>
+</section>
 
-<div class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('tab-entry')">📝 录入</button>
-  <button class="tab-btn" onclick="switchTab('tab-history')">📁 历史项目</button>
-  <button class="tab-btn" onclick="switchTab('tab-board')">📊 数据看板</button>
-</div>
-
-<!-- ══ Tab 录入 ══ -->
-<div id="tab-entry" class="tab-pane active">
-<div class="container">
-  <div class="tip">💡 填写项目数据后点「保存项目」，数据存在浏览器本地。可在「历史项目」查看和生成周报。</div>
-
-  <div class="card">
-    <div class="card-header"><div class="card-title"><span class="dot"></span>基本信息</div></div>
-    <div class="card-body">
-      <div class="form-grid">
-        <div class="form-group wide"><label>项目名称</label><input type="text" id="projName" placeholder="例：免费口腔护理" /></div>
-        <div class="form-group"><label>需求数（篇）</label><input type="number" id="projDemand" placeholder="800" oninput="localStorage.setItem('hd_demand',this.value)" /></div>
-        <div class="form-group">
-          <label>周标签 <span style="font-weight:400;color:#bbb;">（如 26W15）</span></label>
-          <input type="text" id="projWeekTag" placeholder="26W15" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()" />
+<!-- ══ Mock UI ══ -->
+<div class="mock-wrap">
+  <div class="mock-window">
+    <div class="mock-bar">
+      <div class="mock-dot r"></div>
+      <div class="mock-dot y"></div>
+      <div class="mock-dot g"></div>
+      <div class="mock-url">黑钻数据工具 · 数据看板</div>
+    </div>
+    <div class="mock-tabs">
+      <div class="mock-tab">✅ 每日 Todo</div>
+      <div class="mock-tab">📝 录入</div>
+      <div class="mock-tab">💳 结算</div>
+      <div class="mock-tab active">📊 数据看板</div>
+      <div class="mock-tab">📋 台账生成</div>
+    </div>
+    <div class="mock-body">
+      <div class="mock-grid">
+        <div class="mock-card">
+          <div class="mc-label">本周总曝光</div>
+          <div class="mc-val red">2,847w</div>
+          <div class="mc-change up">↑12.3% 较上周</div>
         </div>
-        <div class="form-group"><label>项目开始日期</label><input type="date" id="projStart" /></div>
-        <div class="form-group"><label>项目结束日期</label><input type="date" id="projEnd" /></div>
+        <div class="mock-card">
+          <div class="mc-label">综合 CPM</div>
+          <div class="mc-val blue">9.84</div>
+          <div class="mc-change down">↓5.2% 较上周</div>
+        </div>
+        <div class="mock-card">
+          <div class="mc-label">爆文率</div>
+          <div class="mc-val">3.42%</div>
+          <div class="mc-change up">↑0.38pp 较上周</div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <!-- 供应商 -->
-  <div class="card">
-    <div class="card-header"><div class="card-title"><span class="dot"></span>供应商数据</div></div>
-    <div class="card-body">
-      <span class="section-label sup">供应商</span>
-      <div class="form-grid">
-        <div class="form-group"><label>总篇数</label><input type="number" id="s_articles" placeholder="500" /></div>
-        <div class="form-group"><label>总曝光</label><input type="number" id="s_exposure" placeholder="5000000" /></div>
-        <div class="form-group"><label>总互动</label><input type="number" id="s_interaction" placeholder="8000" /></div>
-        <div class="form-group"><label>CPC</label><input type="number" step="0.001" id="s_cpc" placeholder="0.101" /></div>
-        <div class="form-group"><label>CPM</label><input type="number" step="0.01" id="s_cpm" placeholder="10.07" /></div>
-        <div class="form-group"><label>CPE</label><input type="number" step="0.01" id="s_cpe" placeholder="6.04" /></div>
-        <div class="form-group"><label>爆文篇数</label><input type="number" id="s_baowen" placeholder="12" /></div>
-        <div class="form-group"><label>爆文率 (%)</label><input type="number" step="0.01" id="s_baowen_rate" placeholder="3.00" /></div>
-        <div class="form-group"><label>总消耗 (元)</label><input type="number" id="s_cost" placeholder="16000" /></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 校园写手 -->
-  <div class="card">
-    <div class="card-header"><div class="card-title"><span class="dot"></span>校园写手数据</div></div>
-    <div class="card-body">
-      <span class="section-label cam">校园写手</span>
-      <div class="form-grid">
-        <div class="form-group"><label>总篇数</label><input type="number" id="c_articles" placeholder="300" /></div>
-        <div class="form-group"><label>总曝光</label><input type="number" id="c_exposure" placeholder="3000000" /></div>
-        <div class="form-group"><label>总互动</label><input type="number" id="c_interaction" placeholder="5000" /></div>
-        <div class="form-group"><label>CPC</label><input type="number" step="0.001" id="c_cpc" placeholder="0.085" /></div>
-        <div class="form-group"><label>CPM</label><input type="number" step="0.01" id="c_cpm" placeholder="8.50" /></div>
-        <div class="form-group"><label>CPE</label><input type="number" step="0.01" id="c_cpe" placeholder="1.63" /></div>
-        <div class="form-group"><label>爆文篇数</label><input type="number" id="c_baowen" placeholder="10" /></div>
-        <div class="form-group"><label>爆文率 (%)</label><input type="number" step="0.01" id="c_baowen_rate" placeholder="2.55" /></div>
-        <div class="form-group"><label>总消耗 (元)</label><input type="number" id="c_cost" placeholder="17705" /></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 汇总文案输出 -->
-  <div class="card output-card" id="summaryCard">
-    <div class="card-header"><div class="card-title"><span class="dot"></span>汇总文案</div></div>
-    <div class="card-body">
-      <div class="report-box">
-        <button class="copy-btn" onclick="copyEl('summaryText',this)">复制</button>
-        <div class="report-text" id="summaryText"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 周报输出 -->
-  <div class="card output-card" id="reportCard">
-    <div class="card-header"><div class="card-title"><span class="dot"></span>周报数据</div></div>
-    <div class="card-body">
-      <div class="prev-selector">
-        <label>对比上周项目：</label>
-        <select id="prevSelect" onchange="updateReport()"></select>
-      </div>
-      <div class="compare-grid" id="compareGrid"></div>
-      <div class="report-box" style="margin-top:14px;">
-        <button class="copy-btn" onclick="copyEl('reportText',this)">复制</button>
-        <div class="report-text" id="reportText"></div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- 底部操作栏 -->
-<div class="action-bar">
-  <button class="btn btn-indigo" onclick="doSummary()">📝 生成汇总文案</button>
-  <button class="btn btn-red"    onclick="doSave()">💾 保存项目</button>
-  <button class="btn btn-blue"   onclick="doReport()">📊 生成周报</button>
-  <div class="spacer"></div>
-  <button class="btn btn-ghost"  onclick="doExport()">⬇️ 导出 JSON</button>
-  <button class="btn btn-ghost"  onclick="clearAll()">🗑 清空</button>
-</div>
-</div>
-
-<!-- ══ Tab 历史项目 ══ -->
-<div id="tab-history" class="tab-pane">
-<div class="container">
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title"><span class="dot"></span>历史项目</div>
-      <span style="font-size:12px;color:#aaa;" id="projCount"></span>
-    </div>
-    <div class="card-body">
-      <div class="proj-list" id="projList">
-        <div class="empty-state"><div class="icon">📭</div><div>暂无数据，去录入页保存项目</div></div>
+      <div class="mock-row">
+        <div class="mock-chart">
+          <div class="mc-label">📈 CPM / CPE 周趋势</div>
+          <div class="chart-bars">
+            <div class="chart-bar" style="height:45%;background:linear-gradient(180deg,#e94560,#c73652);opacity:.7;"></div>
+            <div class="chart-bar" style="height:60%;background:linear-gradient(180deg,#e94560,#c73652);opacity:.8;"></div>
+            <div class="chart-bar" style="height:50%;background:linear-gradient(180deg,#e94560,#c73652);opacity:.85;"></div>
+            <div class="chart-bar" style="height:75%;background:linear-gradient(180deg,#e94560,#c73652);opacity:.9;"></div>
+            <div class="chart-bar" style="height:55%;background:linear-gradient(180deg,#e94560,#c73652);"></div>
+            <div class="chart-bar" style="height:40%;background:linear-gradient(180deg,#0f3460,#1a5276);opacity:.7;"></div>
+            <div class="chart-bar" style="height:55%;background:linear-gradient(180deg,#0f3460,#1a5276);opacity:.8;"></div>
+            <div class="chart-bar" style="height:48%;background:linear-gradient(180deg,#0f3460,#1a5276);opacity:.85;"></div>
+            <div class="chart-bar" style="height:65%;background:linear-gradient(180deg,#0f3460,#1a5276);opacity:.9;"></div>
+            <div class="chart-bar" style="height:50%;background:linear-gradient(180deg,#0f3460,#1a5276);"></div>
+          </div>
+        </div>
+        <div class="mock-list">
+          <div class="mc-label">📁 本周项目</div>
+          <div class="mock-proj-item">
+            <div class="mock-proj-dot"></div>
+            <div class="mock-proj-name">免费口腔护理</div>
+            <div class="mock-proj-val">¥32,000</div>
+          </div>
+          <div class="mock-proj-item">
+            <div class="mock-proj-dot" style="background:#6366f1;"></div>
+            <div class="mock-proj-name">会员惊喜多选1</div>
+            <div class="mock-proj-val">¥20,000</div>
+          </div>
+          <div class="mock-proj-item">
+            <div class="mock-proj-dot" style="background:#10b981;"></div>
+            <div class="mock-proj-name">黑钻专属福利</div>
+            <div class="mock-proj-val">¥18,500</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
-</div>
 
-<!-- ══ Tab 数据看板 ══ -->
-<div id="tab-board" class="tab-pane">
-<div class="container">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-    <div style="font-size:13px;color:#666;">按周期（周四→下周三）汇总，点击项目卡片展开明细</div>
-    <button class="btn btn-ghost" onclick="loadDashboard()" style="padding:6px 14px;font-size:12px;">🔄 刷新</button>
-  </div>
+<!-- ══ Features ══ -->
+<section class="section" id="features">
+  <div class="section-inner">
+    <div class="section-tag">核心功能</div>
+    <div class="section-title">一个工具，覆盖全流程</div>
+    <div class="section-sub">从数据录入到周报生成，从结算管理到数据看板，黑钻数据工具帮你把重复性工作全部自动化。</div>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-    <div class="card" style="padding:16px;">
-      <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:12px;">📈 CPM / CPE 周趋势</div>
-      <canvas id="chartCpmCpe" height="160"></canvas>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon red">📝</div>
+        <h3>智能数据录入</h3>
+        <p>支持手动填写、粘贴表格文字自动解析、飞书文档一键拉取，三种方式灵活录入供应商和校园写手数据。</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon blue">📊</div>
+        <h3>自动汇总文案</h3>
+        <p>填完数据一键生成标准汇总文案，自动计算 CPM、CPE、爆文率等核心指标，直接复制发送。</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon indigo">📈</div>
+        <h3>周报对比生成</h3>
+        <p>自动与上周数据对比，生成环比分析文案。爆文率按百分点差值计算，CPM/CPE 按变化率计算，逻辑清晰。</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon green">💳</div>
+        <h3>结算表自动生成</h3>
+        <p>上传数据回收表，自动按阶梯规则计算每位写手结算金额，生成含组员结算、组长激励的完整 Excel 结算表。</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon orange">🗂</div>
+        <h3>数据看板</h3>
+        <p>按周期（周四→下周三）自动聚合历史数据，CPM/CPE/爆文率趋势折线图，一眼看清每周表现变化。</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon purple">✅</div>
+        <h3>每日 Todo 管理</h3>
+        <p>内置团队待办看板，支持按人分配、优先级标记、大象消息扫描自动提取待办，告别遗漏。</p>
+      </div>
     </div>
-    <div class="card" style="padding:16px;">
-      <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:12px;">🔥 爆文率 / 总消耗 周趋势</div>
-      <canvas id="chartViralCost" height="160"></canvas>
+  </div>
+</section>
+
+<!-- ══ Flow ══ -->
+<section class="section gray">
+  <div class="section-inner">
+    <div class="section-tag">使用流程</div>
+    <div class="section-title">4 步完成一次完整汇报</div>
+    <div class="section-sub">从拿到数据到发出周报，最快 3 分钟搞定。</div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <h4>录入数据</h4>
+        <p>粘贴供应商表格文字，自动解析填入各字段</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <h4>生成汇总</h4>
+        <p>一键计算 CPM/CPE/爆文率，生成标准汇总文案</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <h4>写入表格</h4>
+        <p>自动写入黑钻数据反馈汇总 Excel，含环比计算</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <h4>生成周报</h4>
+        <p>对比上周数据，自动生成完整周报文案，复制发送</p>
+      </div>
     </div>
   </div>
+</section>
 
-  <div id="dashboardContent">
-    <div class="empty-state"><div class="icon">📊</div><div>暂无数据</div></div>
+<!-- ══ Stats ══ -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-tag">数据能力</div>
+    <div class="section-title">覆盖所有关键指标</div>
+    <div class="section-sub">自动计算并追踪所有你需要的数据维度。</div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-val">10+</div>
+        <div class="stat-label">自动计算指标<br>CPM / CPE / CPC / 爆文率…</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">2</div>
+        <div class="stat-label">数据来源维度<br>供应商 + 校园写手</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">∞</div>
+        <div class="stat-label">历史项目存储<br>按周自动聚合看板</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">3min</div>
+        <div class="stat-label">完成一次完整汇报<br>从录入到发出</div>
+      </div>
+    </div>
   </div>
-</div>
-</div>
+</section>
 
-<div id="toast" class="toast"></div>
+<!-- ══ CTA ══ -->
+<section class="cta-section">
+  <h2>想要这个工具？</h2>
+  <p>目前为内部使用版本，如需了解或接入，联系 liyueshan</p>
+  <a href="mailto:yueshan743@gmail.com" class="cta-btn">📬 联系我</a>
+</section>
 
-<script>
-// ─────────────────────────────────────────────
-// 工具函数
-// ─────────────────────────────────────────────
-const DB_KEY = 'hd_projects_v1';
+<footer>
+  © 2026 黑钻数据工具 · 美团黑钻创作者项目内部工具
+</footer>
 
-function loadDB() {
-  try { return JSON.parse(localStorage.getItem(DB_KEY) || '[]'); } catch { return []; }
-}
-function saveDB(arr) {
-  localStorage.setItem(DB_KEY, JSON.stringify(arr));
-}
-
-let allProjects = loadDB();
-let currentSummary = null;
-let _chartCpmCpe = null, _chartViralCost = null;
-
-function showToast(msg, type='info') {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast ' + type + ' show';
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-function fmtNum(v) {
-  const n = Number(v || 0);
-  return n >= 10000 ? (n / 10000).toFixed(1) + 'w' : n.toLocaleString('zh-CN');
-}
-
-function escHtml(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function copyEl(id, btn) {
-  navigator.clipboard.writeText(document.getElementById(id).textContent).then(() => {
-    btn.textContent = '✅ 已复制'; btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = '复制'; btn.classList.remove('copied'); }, 2000);
-  });
-}
-
-function switchTab(id) {
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  event.currentTarget.classList.add('active');
-  if (id === 'tab-history') renderProjects();
-  if (id === 'tab-board')   loadDashboard();
-}
-
-function getFields(prefix) {
-  const keys = ['articles','exposure','interaction','cpc','cpm','cpe','baowen','baowen_rate','cost'];
-  const obj = {};
-  keys.forEach(k => {
-    const el = document.getElementById(prefix + k);
-    obj[k] = el ? (parseFloat(el.value) || 0) : 0;
-  });
-  return obj;
-}
-
-function clearAll() {
-  ['projName','projWeekTag','projStart','projEnd',
-   's_articles','s_exposure','s_interaction','s_cpc','s_cpm','s_cpe','s_baowen','s_baowen_rate','s_cost',
-   'c_articles','c_exposure','c_interaction','c_cpc','c_cpm','c_cpe','c_baowen','c_baowen_rate','c_cost'
-  ].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-  document.getElementById('summaryCard').classList.remove('show');
-  document.getElementById('reportCard').classList.remove('show');
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('projEnd').value = today;
-  document.getElementById('projStart').value = today;
-  autoFillWeekTag();
-}
-
-// ─────────────────────────────────────────────
-// 周标签计算（周四～周三，2026-01-01=W1）
-// ─────────────────────────────────────────────
-function dateToWeekTag(dateStr) {
-  if (!dateStr) return '';
-  const BASE = new Date('2026-01-01T00:00:00');
-  const d    = new Date(dateStr + 'T00:00:00');
-  const diffDays = Math.floor((d - BASE) / 86400000);
-  if (diffDays < 0) return '';
-  const weekNum  = Math.floor(diffDays / 7) + 1;
-  const thuOfWeek = new Date(BASE.getTime() + (weekNum - 1) * 7 * 86400000);
-  const year = thuOfWeek.getFullYear().toString().slice(2);
-  return year + 'W' + weekNum;
-}
-
-function autoFillWeekTag() {
-  const endVal   = document.getElementById('projEnd').value;
-  const startVal = document.getElementById('projStart').value;
-  const tag = dateToWeekTag(endVal || startVal);
-  if (tag) document.getElementById('projWeekTag').value = tag;
-}
-
-// ─────────────────────────────────────────────
-// 初始化
-// ─────────────────────────────────────────────
-(function init() {
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('projEnd').value   = today;
-  document.getElementById('projStart').value = today;
-  autoFillWeekTag();
-  const savedDemand = localStorage.getItem('hd_demand');
-  if (savedDemand) document.getElementById('projDemand').value = savedDemand;
-  document.getElementById('projEnd').addEventListener('change', autoFillWeekTag);
-  document.getElementById('projStart').addEventListener('change', autoFillWeekTag);
-  loadProjects();
-})();
-
-// ─────────────────────────────────────────────
-// 汇总文案生成（纯本地计算）
-// ─────────────────────────────────────────────
-function doSummary() {
-  const name   = document.getElementById('projName').value.trim();
-  const demand = parseInt(document.getElementById('projDemand').value) || 0;
-  if (!name)   { showToast('请填写项目名称', 'error'); return; }
-  if (!demand) { showToast('请填写需求数', 'error'); return; }
-
-  const s = getFields('s_');
-  const c = getFields('c_');
-
-  const totalArt  = (s.articles||0) + (c.articles||0);
-  const totalExp  = (s.exposure||0) + (c.exposure||0);
-  const totalInt  = (s.interaction||0) + (c.interaction||0);
-  const totalCost = (s.cost||0) + (c.cost||0);
-  const totalBw   = (s.baowen||0) + (c.baowen||0);
-  const totalBwR  = totalArt ? (totalBw / totalArt * 100).toFixed(2) : '0.00';
-  const totalCpm  = totalExp ? (totalCost / totalExp * 1000).toFixed(2) : '0.00';
-  const totalCpe  = totalInt ? (totalCost / totalInt).toFixed(2) : '0.00';
-
-  const fn = v => Number(v||0).toLocaleString('zh-CN');
-  const fr = v => (+v||0).toFixed(2) + '%';
-
-  let lines = [];
-  lines.push(`【${name}】数据汇总`);
-  lines.push(`需求数：${fn(demand)}篇`);
-  lines.push(`\n📊 整体数据`);
-  lines.push(`总篇数：${fn(totalArt)}篇 | 总曝光：${fn(totalExp)} | 总互动：${fn(totalInt)}`);
-  lines.push(`CPM：${totalCpm} | CPE：${totalCpe} | 爆文率：${totalBwR}% | 总消耗：¥${fn(totalCost)}`);
-
-  if (s.articles) {
-    lines.push(`\n🔴 供应商`);
-    lines.push(`总篇数：${fn(s.articles)}篇 | 总曝光：${fn(s.exposure)} | 总互动：${fn(s.interaction)}`);
-    lines.push(`CPC：${(+s.cpc||0).toFixed(3)} | CPM：${(+s.cpm||0).toFixed(2)} | CPE：${(+s.cpe||0).toFixed(2)}`);
-    lines.push(`爆文：${fn(s.baowen)}篇（${fr(s.baowen_rate)}）| 消耗：¥${fn(s.cost)}`);
-  }
-  if (c.articles) {
-    lines.push(`\n🔵 校园写手`);
-    lines.push(`总篇数：${fn(c.articles)}篇 | 总曝光：${fn(c.exposure)} | 总互动：${fn(c.interaction)}`);
-    lines.push(`CPC：${(+c.cpc||0).toFixed(3)} | CPM：${(+c.cpm||0).toFixed(2)} | CPE：${(+c.cpe||0).toFixed(2)}`);
-    lines.push(`爆文：${fn(c.baowen)}篇（${fr(c.baowen_rate)}）| 消耗：¥${fn(c.cost)}`);
-  }
-
-  const summary = {
-    articles: totalArt, exposure: totalExp, interaction: totalInt,
-    cost: totalCost, baowen: totalBw, baowen_rate: parseFloat(totalBwR),
-    cpm: parseFloat(totalCpm), cpe: parseFloat(totalCpe),
-    cpc: s.cpc || 0
-  };
-  currentSummary = summary;
-
-  document.getElementById('summaryText').textContent = lines.join('\n');
-  document.getElementById('summaryCard').classList.add('show');
-  showToast('✅ 汇总文案已生成', 'success');
-}
-
-// ─────────────────────────────────────────────
-// 保存项目到 localStorage
-// ─────────────────────────────────────────────
-function doSave() {
-  const name      = document.getElementById('projName').value.trim();
-  const week_tag  = document.getElementById('projWeekTag').value.trim().toUpperCase();
-  const start_date = document.getElementById('projStart').value;
-  const end_date   = document.getElementById('projEnd').value;
-  if (!name)     { showToast('请填写项目名称', 'error'); return; }
-  if (!week_tag) { showToast('请填写周标签', 'error'); return; }
-
-  const supplier = getFields('s_');
-  const campus   = getFields('c_');
-
-  // 计算汇总
-  const ta = (supplier.articles||0) + (campus.articles||0);
-  const te = (supplier.exposure||0) + (campus.exposure||0);
-  const ti = (supplier.interaction||0) + (campus.interaction||0);
-  const tc = (supplier.cost||0) + (campus.cost||0);
-  const tb = (supplier.baowen||0) + (campus.baowen||0);
-  const summary = {
-    articles: ta, exposure: te, interaction: ti, cost: tc, baowen: tb,
-    baowen_rate: ta ? parseFloat((tb/ta*100).toFixed(2)) : 0,
-    cpm: te ? parseFloat((tc/te*1000).toFixed(2)) : 0,
-    cpe: ti ? parseFloat((tc/ti).toFixed(2)) : 0,
-    cpc: supplier.cpc || 0
-  };
-
-  const db = loadDB();
-  const id = name + '_' + (end_date || start_date || Date.now());
-  // 去重：同名同日期覆盖
-  const idx = db.findIndex(p => (p.id || (p.name+'_'+(p.end_date||p.start_date))) === id);
-  const record = { id, name, week_tag, start_date, end_date, supplier, campus, summary };
-  if (idx >= 0) db[idx] = record;
-  else db.push(record);
-  saveDB(db);
-  allProjects = db;
-
-  showToast('✅ 已保存「' + name + '」', 'success');
-  renderProjects();
-}
-
-// ─────────────────────────────────────────────
-// 导出 JSON
-// ─────────────────────────────────────────────
-function doExport() {
-  const db = loadDB();
-  if (!db.length) { showToast('暂无数据', 'error'); return; }
-  const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = '黑钻数据_' + new Date().toISOString().slice(0,10) + '.json';
-  a.click();
-  showToast('✅ 已导出 JSON', 'success');
-}
-
-// ─────────────────────────────────────────────
-// 周报生成
-// ─────────────────────────────────────────────
-function doReport() {
-  if (!currentSummary) { showToast('请先生成汇总文案', 'error'); return; }
-  const db = loadDB();
-  const name = document.getElementById('projName').value.trim();
-  const others = db.filter(p => p.name !== name);
-  const sel = document.getElementById('prevSelect');
-  sel.innerHTML = '<option value="">-- 不对比 --</option>' +
-    others.map((p,i) => `<option value="${i}">${p.name}（${p.week_tag||p.end_date||''}）</option>`).join('');
-  sel._others = others;
-  document.getElementById('reportCard').classList.add('show');
-  updateReport();
-}
-
-function updateReport() {
-  const sel = document.getElementById('prevSelect');
-  const others = sel._others || [];
-  const idx = parseInt(sel.value);
-  const prev = (!isNaN(idx) && others[idx]) ? others[idx] : null;
-  const cs = currentSummary;
-  const ps = prev ? prev.summary : null;
-
-  // 对比卡片
-  const metrics = [
-    { key:'cost',        label:'总消耗',  fmt: v => '¥'+fmtNum(v) },
-    { key:'articles',    label:'总篇数',  fmt: v => fmtNum(v)+'篇' },
-    { key:'exposure',    label:'总曝光',  fmt: v => fmtNum(v) },
-    { key:'cpm',         label:'CPM',    fmt: v => (+v).toFixed(2) },
-    { key:'cpe',         label:'CPE',    fmt: v => (+v).toFixed(2) },
-    { key:'baowen_rate', label:'爆文率', fmt: v => (+v).toFixed(2)+'%' },
-  ];
-  function mkCard(data, isCur) {
-    return '<div class="cmp-card '+(isCur?'cur':'prev')+'">' +
-      '<h4>'+(isCur?'本周 <span style="color:#e94560">（当前）</span>':(prev?'上周 '+prev.name:''))+'</h4>' +
-      '<div class="metrics-row">' +
-      metrics.map(m => {
-        const val = data[m.key] || 0;
-        let ch = '';
-        if (isCur && ps) {
-          const pv = ps[m.key] || 0;
-          if (m.key === 'baowen_rate') {
-            const diff = (val - pv).toFixed(2);
-            if (diff != 0) ch = '<span class="mc '+(diff>0?'up':'down')+'">'+( diff>0?'↑':'↓')+Math.abs(diff)+'pp</span>';
-          } else if (pv !== 0) {
-            const pct = ((val - pv) / pv * 100).toFixed(1);
-            ch = '<span class="mc '+(pct>0?'up':'down')+'">'+( pct>0?'↑':'↓')+Math.abs(pct)+'%</span>';
-          }
-        }
-        return '<div class="metric"><span class="ml">'+m.label+'</span><span class="mv">'+m.fmt(val)+'</span>'+ch+'</div>';
-      }).join('') + '</div></div>';
-  }
-  const grid = document.getElementById('compareGrid');
-  grid.innerHTML = mkCard(cs, true) + (ps ? mkCard(ps, false) : '');
-
-  // 文案
-  const fn = v => Number(v||0).toLocaleString('zh-CN');
-  const fp = (cur, pre) => {
-    if (!pre || pre === 0) return '';
-    const d = ((cur - pre) / pre * 100).toFixed(1);
-    return d > 0 ? `↑${d}%` : `↓${Math.abs(d)}%`;
-  };
-  const fpBw = (cur, pre) => {
-    const diff = ((+cur||0) - (+pre||0)).toFixed(2);
-    if (diff == 0) return '';
-    return diff > 0 ? `↑${diff}pp` : `↓${Math.abs(diff)}pp`;
-  };
-
-  let lines = [];
-  const weekTag = document.getElementById('projWeekTag').value || '本周';
-  lines.push(`【${weekTag} 数据总结】`);
-  lines.push(`本周共录入 ${fn(cs.articles)} 篇内容，总曝光 ${fn(cs.exposure)}，总互动 ${fn(cs.interaction)}，总消耗 ¥${fn(cs.cost)}。`);
-  lines.push(`效率指标：CPM ${(+cs.cpm||0).toFixed(2)}${ps?' '+fp(cs.cpm,ps.cpm):''}，CPE ${(+cs.cpe||0).toFixed(2)}${ps?' '+fp(cs.cpe,ps.cpe):''}，爆文率 ${(+cs.baowen_rate||0).toFixed(2)}%${ps?' '+fpBw(cs.baowen_rate,ps.baowen_rate):''}，爆文数 ${fn(cs.baowen)} 篇。`);
-
-  if (ps) {
-    const cpmTrend  = cs.cpm < ps.cpm ? '下降' : '上升';
-    const cpeTrend  = cs.cpe < ps.cpe ? '下降' : '上升';
-    const bwDiff    = ((+cs.baowen_rate||0) - (+ps.baowen_rate||0)).toFixed(2);
-    const bwTrend   = bwDiff >= 0 ? '提升' : '下降';
-    const costTrend = cs.cost > ps.cost ? '增加' : '减少';
-    lines.push(`\n与上周（${prev.name}）相比：`);
-    lines.push(`· CPM ${cpmTrend}（${(+ps.cpm||0).toFixed(2)} → ${(+cs.cpm||0).toFixed(2)}），单位曝光成本${cpmTrend==='下降'?'优化':'偏高'}；`);
-    lines.push(`· CPE ${cpeTrend}（${(+ps.cpe||0).toFixed(2)} → ${(+cs.cpe||0).toFixed(2)}），互动效率${cpeTrend==='下降'?'提升':'有所下滑'}；`);
-    lines.push(`· 爆文率${bwTrend}${Math.abs(bwDiff)}pp（${(+ps.baowen_rate||0).toFixed(2)}% → ${(+cs.baowen_rate||0).toFixed(2)}%）；`);
-    lines.push(`· 总消耗${costTrend}（¥${fn(ps.cost)} → ¥${fn(cs.cost)}）。`);
-    const goodCount = [cpmTrend==='下降', cpeTrend==='下降', bwTrend==='提升'].filter(Boolean).length;
-    lines.push(`\n综合来看，本周${goodCount>=2?'整体表现良好，效率指标持续优化。':'部分指标有所波动，建议关注内容质量。'}`);
-  }
-
-  document.getElementById('reportText').textContent = lines.join('\n');
-}
-
-// ─────────────────────────────────────────────
-// 历史项目列表
-// ─────────────────────────────────────────────
-function loadProjects() {
-  allProjects = loadDB();
-  renderProjects();
-}
-
-function renderProjects() {
-  const list = document.getElementById('projList');
-  if (!list) return;
-  const db = loadDB();
-  const cnt = document.getElementById('projCount');
-  if (cnt) cnt.textContent = db.length + ' 个项目';
-  if (!db.length) {
-    list.innerHTML = '<div class="empty-state"><div class="icon">📭</div><div>暂无数据，去录入页保存项目</div></div>';
-    return;
-  }
-  list.innerHTML = [...db].reverse().map((p, ri) => {
-    const i = db.length - 1 - ri;
-    const s = p.summary || {};
-    const dateStr = p.end_date || p.start_date || '';
-    const eid = escHtml(p.id || p.name);
-    return `<div class="proj-item" id="proj-${i}" onclick="selectProj(${i})">
-      <div style="flex:1;min-width:0;">
-        <div class="pn">${escHtml(p.name||'未命名')} <span style="font-size:11px;color:#aaa;font-weight:400;">${escHtml(p.week_tag||'')}</span></div>
-        <div class="pd">${dateStr}</div>
-      </div>
-      <div class="ps">
-        <span><b>${fmtNum(s.articles)}</b> 篇</span>
-        <span><b>${fmtNum(s.exposure)}</b> 曝光</span>
-        <span><b>${s.cpm||0}</b> CPM</span>
-        <span><b>${s.baowen_rate||0}%</b> 爆文率</span>
-        <span><b>¥${fmtNum(s.cost)}</b></span>
-      </div>
-      <button onclick="event.stopPropagation();deleteProj('${eid}',${i})" title="删除"
-        style="background:none;border:none;color:#d1d5db;font-size:14px;cursor:pointer;padding:2px 5px;border-radius:4px;line-height:1;flex-shrink:0;"
-        onmouseover="this.style.color='#e94560';this.style.background='#fff0f3'"
-        onmouseout="this.style.color='#d1d5db';this.style.background='none'">✕</button>
-    </div>`;
-  }).join('');
-}
-
-function selectProj(i) {
-  const db = loadDB();
-  const p = db[i];
-  if (!p) return;
-  // 切换到录入 tab 并回填
-  document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById('tab-entry').classList.add('active');
-  document.querySelector('.tab-btn').classList.add('active');
-
-  document.getElementById('projName').value  = p.name || '';
-  document.getElementById('projStart').value = p.start_date || '';
-  document.getElementById('projEnd').value   = p.end_date || '';
-  document.getElementById('projWeekTag').value = p.week_tag || dateToWeekTag(p.end_date || p.start_date || '');
-
-  const fieldMap = ['articles','exposure','interaction','cpc','cpm','cpe','baowen','baowen_rate','cost'];
-  const s = p.supplier || {}, c = p.campus || {};
-  fieldMap.forEach(f => {
-    const sv = document.getElementById('s_'+f);
-    const cv = document.getElementById('c_'+f);
-    if (sv) sv.value = s[f] ?? '';
-    if (cv) cv.value = c[f] ?? '';
-  });
-  showToast('📋 已载入「'+p.name+'」', 'info');
-}
-
-function deleteProj(id, i) {
-  if (!confirm('确认删除这条记录？')) return;
-  const db = loadDB();
-  db.splice(i, 1);
-  saveDB(db);
-  allProjects = db;
-  renderProjects();
-  showToast('已删除', 'info');
-}
-
-// ─────────────────────────────────────────────
-// 数据看板
-// ─────────────────────────────────────────────
-function loadDashboard() {
-  const db = loadDB();
-  if (!db.length) {
-    document.getElementById('dashboardContent').innerHTML =
-      '<div class="empty-state"><div class="icon">📊</div><div>暂无数据</div></div>';
-    renderCharts([], []);
-    return;
-  }
-
-  // 按 week_tag 分组
-  const weekMap = {};
-  db.forEach(p => {
-    const tag = p.week_tag || '未知';
-    if (!weekMap[tag]) weekMap[tag] = { tag, projects: [] };
-    weekMap[tag].projects.push(p);
-  });
-
-  // 排序（按 W 数字）
-  const sorted = Object.values(weekMap).sort((a, b) => {
-    const na = parseInt((a.tag.match(/W(\d+)/)||[0,0])[1]);
-    const nb = parseInt((b.tag.match(/W(\d+)/)||[0,0])[1]);
-    return na - nb;
-  });
-
-  // 汇总每周数据
-  sorted.forEach(w => {
-    const ps = w.projects;
-    const sum = { articles:0, exposure:0, interaction:0, cost:0, baowen:0 };
-    ps.forEach(p => {
-      const s = p.summary || {};
-      sum.articles    += s.articles    || 0;
-      sum.exposure    += s.exposure    || 0;
-      sum.interaction += s.interaction || 0;
-      sum.cost        += s.cost        || 0;
-      sum.baowen      += s.baowen      || 0;
-    });
-    sum.cpm         = sum.exposure    ? parseFloat((sum.cost/sum.exposure*1000).toFixed(2)) : 0;
-    sum.cpe         = sum.interaction ? parseFloat((sum.cost/sum.interaction).toFixed(2))   : 0;
-    sum.baowen_rate = sum.articles    ? parseFloat((sum.baowen/sum.articles*100).toFixed(2)): 0;
-    w.week_summary  = sum;
-  });
-
-  renderCharts(sorted, sorted);
-  renderDashboard(sorted);
-}
-
-function renderDashboard(weeks) {
-  const fn = v => Number(v||0).toLocaleString('zh-CN');
-  const content = document.getElementById('dashboardContent');
-  if (!weeks.length) {
-    content.innerHTML = '<div class="empty-state"><div class="icon">📊</div><div>暂无数据</div></div>';
-    return;
-  }
-
-  content.innerHTML = [...weeks].reverse().map((w, wi) => {
-    const prev = weeks[weeks.length - 2 - wi];
-    const s = w.week_summary;
-    const ps = prev ? prev.week_summary : null;
-
-    function wsCard(label, val, prevVal, isLower) {
-      let ch = '';
-      if (ps && prevVal !== undefined) {
-        if (label === '爆文率') {
-          const diff = (val - prevVal).toFixed(2);
-          if (diff != 0) ch = `<div class="wsc ${diff>0?'up':'down'}">${diff>0?'↑':'↓'}${Math.abs(diff)}pp</div>`;
-        } else if (prevVal) {
-          const pct = ((val - prevVal) / prevVal * 100).toFixed(1);
-          const good = isLower ? pct < 0 : pct > 0;
-          ch = `<div class="wsc ${good?'up':'down'}">${pct>0?'↑':'↓'}${Math.abs(pct)}%</div>`;
-        }
-      }
-      return `<div class="ws-card"><div class="wsl">${label}</div><div class="wsv">${val}</div>${ch}</div>`;
-    }
-
-    return `<div class="week-block">
-      <div class="week-header">
-        <span class="week-badge">${w.tag}</span>
-        <span style="font-size:13px;color:#666;">${w.projects.length} 个项目 · 总消耗 ¥${fn(s.cost)}</span>
-      </div>
-      <div class="week-summary-row">
-        ${wsCard('总篇数', fn(s.articles), ps?.articles, false)}
-        ${wsCard('总曝光', fmtNum(s.exposure), ps?.exposure, false)}
-        ${wsCard('总互动', fmtNum(s.interaction), ps?.interaction, false)}
-        ${wsCard('CPM', s.cpm, ps?.cpm, true)}
-        ${wsCard('CPE', s.cpe, ps?.cpe, true)}
-        ${wsCard('爆文率', s.baowen_rate+'%', ps?.baowen_rate, false)}
-        ${wsCard('总消耗', '¥'+fn(s.cost), ps?.cost, false)}
-      </div>
-      <div class="proj-cards">
-        ${w.projects.map(p => {
-          const ps2 = p.summary || {};
-          return `<div class="proj-card" onclick="this.classList.toggle('expanded')">
-            <div class="proj-card-header">
-              <div><div class="proj-card-name">${escHtml(p.name)}</div><div class="proj-card-dates">${p.end_date||p.start_date||''}</div></div>
-              <div class="proj-card-cost">¥${fn(ps2.cost)}</div>
-            </div>
-            <div class="proj-card-body">
-              <div class="proj-detail-grid">
-                <div class="detail-col sup">
-                  <h5>供应商</h5>
-                  ${detailRows(p.supplier||{})}
-                </div>
-                <div class="detail-col cam">
-                  <h5>校园写手</h5>
-                  ${detailRows(p.campus||{})}
-                </div>
-              </div>
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function detailRows(d) {
-  const fn = v => Number(v||0).toLocaleString('zh-CN');
-  return [
-    ['篇数', fn(d.articles)+'篇'],
-    ['曝光', fmtNum(d.exposure)],
-    ['互动', fmtNum(d.interaction)],
-    ['CPM', (+d.cpm||0).toFixed(2)],
-    ['CPE', (+d.cpe||0).toFixed(2)],
-    ['爆文率', (+d.baowen_rate||0).toFixed(2)+'%'],
-    ['消耗', '¥'+fn(d.cost)],
-  ].map(([k,v]) => `<div class="detail-row"><span class="dk">${k}</span><span class="dv">${v}</span></div>`).join('');
-}
-
-// ─────────────────────────────────────────────
-// 图表
-// ─────────────────────────────────────────────
-function renderCharts(weeksForCpm, weeksForViral) {
-  const labels = weeksForCpm.map(w => w.tag);
-  const cpm    = weeksForCpm.map(w => +(w.week_summary.cpm||0).toFixed(2));
-  const cpe    = weeksForCpm.map(w => +(w.week_summary.cpe||0).toFixed(2));
-  const viral  = weeksForViral.map(w => +(w.week_summary.baowen_rate||0).toFixed(2));
-  const cost   = weeksForViral.map(w => +(w.week_summary.cost||0));
-
-  const baseOpts = {
-    responsive: true,
-    plugins: { legend: { labels: { font: { size: 11 } } } },
-    scales: { x: { ticks: { font: { size: 11 } } } }
-  };
-
-  if (_chartCpmCpe) _chartCpmCpe.destroy();
-  _chartCpmCpe = new Chart(document.getElementById('chartCpmCpe'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        { label: 'CPM', data: cpm, borderColor: '#e94560', backgroundColor: 'rgba(233,69,96,0.08)', tension: 0.3, pointRadius: 4, yAxisID: 'y' },
-        { label: 'CPE', data: cpe, borderColor: '#0f3460', backgroundColor: 'rgba(15,52,96,0.08)',  tension: 0.3, pointRadius: 4, yAxisID: 'y1' },
-      ]
-    },
-    options: { ...baseOpts, scales: { ...baseOpts.scales,
-      y:  { type:'linear', position:'left',  ticks:{ font:{size:11} }, title:{display:true,text:'CPM'} },
-      y1: { type:'linear', position:'right', ticks:{ font:{size:11} }, title:{display:true,text:'CPE'}, grid:{drawOnChartArea:false} }
-    }}
-  });
-
-  if (_chartViralCost) _chartViralCost.destroy();
-  _chartViralCost = new Chart(document.getElementById('chartViralCost'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        { label: '爆文率(%)', data: viral, borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.08)', tension: 0.3, pointRadius: 4, yAxisID: 'y' },
-        { label: '总消耗(元)', data: cost,  borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.08)', tension: 0.3, pointRadius: 4, yAxisID: 'y1' },
-      ]
-    },
-    options: { ...baseOpts, scales: { ...baseOpts.scales,
-      y:  { type:'linear', position:'left',  ticks:{ font:{size:11} }, title:{display:true,text:'爆文率(%)'} },
-      y1: { type:'linear', position:'right', ticks:{ font:{size:11} }, title:{display:true,text:'总消耗(元)'}, grid:{drawOnChartArea:false} }
-    }}
-  });
-}
-</script>
 </body>
 </html>
